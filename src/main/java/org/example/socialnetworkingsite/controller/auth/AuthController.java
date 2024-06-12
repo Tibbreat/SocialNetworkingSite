@@ -1,5 +1,7 @@
 package org.example.socialnetworkingsite.controller.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.example.socialnetworkingsite.dto.LoginDTO;
 import org.example.socialnetworkingsite.entites.User;
 import org.example.socialnetworkingsite.model.JwtAuthResponseModel;
@@ -35,7 +37,7 @@ public class AuthController {
         } else {
             JwtAuthResponseModel jwtAuthResponseModel = new JwtAuthResponseModel();
             jwtAuthResponseModel.setAccessToken(token);
-            //Stored token
+            //Save token in DB
             User user = userServiceImpl.findUserByEmailId(loginDTO.getEmailId());
             if (user != null) {
                 user.setAccessToken(token);

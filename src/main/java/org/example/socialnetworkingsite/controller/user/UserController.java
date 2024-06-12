@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/user")
 public class UserController {
     @Autowired
     UserServiceImpl userServiceImpl;
@@ -28,6 +28,11 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<ResponseModel> register(@RequestBody User user) {
+        //Check email existed in BD
+        if (userServiceImpl.findUserByEmailId(user.getEmailId()) != null) {
+            return ResponseEntity.badRequest().body(new ResponseModel(HTTPCode.HTTP_CONFLICT, "Email was existed in DB"));
+        }
+        //Register new user
         String passwordHashed = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordHashed);
         if (!user.getEmailId().matches(RegexConstant.EMAIL_REGEX)) {
@@ -42,20 +47,19 @@ public class UserController {
         }
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/update")
     public ResponseEntity<ResponseModel> edit(@RequestBody User user) {
         UserDetails userDetail = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User existingUser = userServiceImpl.findByAccessToken(userDetail.getUsername());
+        User existingUser = userServiceImpl.findUserByEmailId(userDetail.getUsername());
         if (existingUser != null && existingUser.getEmailId().equals(user.getEmailId())) {
             BeanUtils.copyProperties(user, existingUser);
             if (userServiceImpl.saveUser(existingUser) == null) {
                 return ResponseEntity.status(HTTPCode.HTTP_NO_CONTENT).body(new ResponseModel(HTTPCode.HTTP_NO_CONTENT, "Update failed"));
             } else {
-                return ResponseEntity.status(HTTPCode.HTTP_OK).body(new ResponseModel(HTTPCode.HTTP_OK, "Update succeefully"));
+                return ResponseEntity.status(HTTPCode.HTTP_OK).body(new ResponseModel(HTTPCode.HTTP_OK, "Update successfully"));
             }
-        }else{
+        } else {
             return ResponseEntity.status(HTTPCode.HTTP_NO_CONTENT).body(new ResponseModel(HTTPCode.HTTP_NO_CONTENT, "Update failed"));
-
         }
     }
 }
