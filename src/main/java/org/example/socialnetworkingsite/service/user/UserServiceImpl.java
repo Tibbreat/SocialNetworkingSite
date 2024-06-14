@@ -4,6 +4,9 @@ import org.example.socialnetworkingsite.entites.User;
 import org.example.socialnetworkingsite.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,5 +27,9 @@ public class UserServiceImpl implements UserService {
     public User findByAccessToken(String token) {
         return userRepo.findByAccessToken(token);
     }
-
+    @Transactional
+    public void updateUserProfile(String emailId, String gender, String firstName, String lastName, int age,
+                                  Date dateOfBirth, int contactNo, String city, String state, String country) {
+        userRepo.updateUserProfile(emailId, gender, firstName, lastName, age, dateOfBirth, contactNo, city, state, country);
+    }
 }

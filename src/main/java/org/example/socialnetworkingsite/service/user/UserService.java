@@ -8,4 +8,5 @@ public interface UserService {
     User findUserByEmailId(String emailId);
 
     User findByAccessToken(String token);
+
 }

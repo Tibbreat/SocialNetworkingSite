@@ -6,9 +6,14 @@ import java.util.List;
 
 public interface PostService {
     Post createPost(Post post);
+
     Post updatePost(Post post);
-    Post deletePost(Post post);
+
+    boolean deletePost(long postId);
+
     List<Post> getAllPosts();
+
     Post getPostById(long id);
 
+    List<Post> getAllFromPageToPage(int page, int pageSize);
 }

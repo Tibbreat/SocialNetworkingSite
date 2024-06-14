@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -40,6 +42,7 @@ public class AuthController {
             //Save token in DB
             User user = userServiceImpl.findUserByEmailId(loginDTO.getEmailId());
             if (user != null) {
+                user.setLastLogin(new Date());
                 user.setAccessToken(token);
                 userServiceImpl.saveUser(user);
             }
