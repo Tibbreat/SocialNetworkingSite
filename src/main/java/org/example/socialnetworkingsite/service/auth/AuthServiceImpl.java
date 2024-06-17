@@ -1,8 +1,6 @@
 package org.example.socialnetworkingsite.service.auth;
 
-import org.example.socialnetworkingsite.entites.User;
 import org.example.socialnetworkingsite.jwt.JwtTokenProvider;
-import org.example.socialnetworkingsite.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

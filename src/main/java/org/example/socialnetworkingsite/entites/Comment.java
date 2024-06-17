@@ -1,10 +1,16 @@
 package org.example.socialnetworkingsite.entites;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +19,6 @@ public class Comment {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String description;
-
 
     @ManyToOne
     @JoinColumn(name = "email_id")

@@ -1,5 +1,7 @@
 package org.example.socialnetworkingsite.controller.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.example.socialnetworkingsite.dto.LoginDTO;
 import org.example.socialnetworkingsite.entites.User;
 import org.example.socialnetworkingsite.model.JwtAuthResponseModel;
@@ -13,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -35,9 +39,10 @@ public class AuthController {
         } else {
             JwtAuthResponseModel jwtAuthResponseModel = new JwtAuthResponseModel();
             jwtAuthResponseModel.setAccessToken(token);
-            //Stored token
+            //Save token in DB
             User user = userServiceImpl.findUserByEmailId(loginDTO.getEmailId());
             if (user != null) {
+                user.setLastLogin(new Date());
                 user.setAccessToken(token);
                 userServiceImpl.saveUser(user);
             }
