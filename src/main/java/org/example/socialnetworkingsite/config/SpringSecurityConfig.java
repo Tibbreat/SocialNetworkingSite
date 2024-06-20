@@ -34,19 +34,14 @@ public class SpringSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> {
-                    authorize.requestMatchers("/api/auth/**",
-                            "api/user/register",
-                            "/v3/api-docs/**", "/swagger-ui/**"
-                            , "/oauth/**").permitAll();
+                    authorize.requestMatchers("/api/auth/login",
+                            "api/user/register").permitAll();
                     authorize.anyRequest().authenticated();
-                })
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/api/auth/loginGoogle"))
-                .httpBasic(Customizer.withDefaults());
+                }).httpBasic(Customizer.withDefaults());
 
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

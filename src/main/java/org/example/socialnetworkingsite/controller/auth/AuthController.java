@@ -1,21 +1,22 @@
 package org.example.socialnetworkingsite.controller.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.example.socialnetworkingsite.dto.LoginDTO;
 import org.example.socialnetworkingsite.entites.User;
 import org.example.socialnetworkingsite.model.JwtAuthResponseModel;
+import org.example.socialnetworkingsite.repository.UserRepo;
 import org.example.socialnetworkingsite.service.auth.AuthServiceImpl;
+import org.example.socialnetworkingsite.service.user.UserService;
 import org.example.socialnetworkingsite.service.user.UserServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -48,9 +49,4 @@ public class AuthController {
             return new ResponseEntity<>(jwtAuthResponseModel, HttpStatus.OK);
         }
     }
-    @GetMapping("/loginGoogle")
-    public Map<String, Object> loginGoogle(@AuthenticationPrincipal OAuth2User principal) {
-        return principal.getAttributes();
-    }
-
 }
