@@ -1,14 +1,13 @@
 package org.example.socialnetworkingsite.controller.comment;
 
-import org.example.socialnetworkingsite.constant.HTTPCode;
 import org.example.socialnetworkingsite.dto.CommentDTO;
 import org.example.socialnetworkingsite.entites.Comment;
 import org.example.socialnetworkingsite.entites.Post;
 import org.example.socialnetworkingsite.entites.User;
 import org.example.socialnetworkingsite.model.ResponseModel;
 import org.example.socialnetworkingsite.service.comment.CommentServiceImpl;
+import org.example.socialnetworkingsite.service.firebase.NotificationService;
 import org.example.socialnetworkingsite.service.user.UserServiceImpl;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +28,9 @@ public class CommentController {
     UserServiceImpl userService;
     @Autowired
     private CommentServiceImpl commentServiceImpl;
+
+    @Autowired
+    NotificationService notificationService;
 
     @PostMapping("/create")
     public ResponseEntity<ResponseModel> createComment(@RequestParam Long postId,
@@ -63,7 +65,7 @@ public class CommentController {
     }
 
     @GetMapping("/getCommentOfPost")
-    public ResponseEntity<ResponseModel> getCommentOfPost(@RequestParam Long postId) {
+    public ResponseEntity<ResponseModel> getCommentOfPost(@RequestParam Long postId)  {
         List<Comment> comments = commentServiceImpl.getCommentsOfPost(postId);
 
         if (comments.isEmpty()) {
@@ -80,7 +82,6 @@ public class CommentController {
                     .emailId(comment.getUser().getEmailId())
                     .build());
         }
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseModel(HttpStatus.OK.value(), "Found " + comments.size() + " comments", commentDTOS));
     }
@@ -88,22 +89,23 @@ public class CommentController {
     @GetMapping("/getCommentOfComment")
     public ResponseEntity<ResponseModel> getCommentOfComment(@RequestParam Long commentId) {
         List<Comment> comments = commentServiceImpl.getCommentOfComment(commentId);
-        if (comments.isEmpty()) {
+        if (!comments.isEmpty()) {
+            List<CommentDTO> commentDTOS = new ArrayList<>();
+            for (Comment comment : comments) {
+
+                commentDTOS.add(CommentDTO.builder()
+                        .id(comment.getId())
+                        .description(comment.getDescription())
+                        .emailId(comment.getUser().getEmailId())
+                        .build());
+            }
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseModel(HttpStatus.OK.value(), "Found " + comments.size() + " comments of comment have id: " + commentId, commentDTOS));
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseModel(HttpStatus.NOT_FOUND.value(), "No comment found"));
         }
-        List<CommentDTO> commentDTOS = new ArrayList<>();
-        for (Comment comment : comments) {
-
-            commentDTOS.add(CommentDTO.builder()
-                    .id(comment.getId())
-                    .description(comment.getDescription())
-                    .emailId(comment.getUser().getEmailId())
-                    .build());
-        }
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseModel(HttpStatus.OK.value(), "Found " + comments.size() + " comments of comment have id: " + commentId, commentDTOS));
     }
 }
 
