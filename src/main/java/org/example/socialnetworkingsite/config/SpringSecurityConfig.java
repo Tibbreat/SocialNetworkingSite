@@ -32,8 +32,8 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorize) -> {
+        http.csrf(AbstractHttpConfigurer::disable).
+                authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/auth/**",
                             "api/user/register",
                             "/v3/api-docs/**", "/swagger-ui/**"
@@ -41,8 +41,8 @@ public class SpringSecurityConfig {
                     authorize.anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/api/auth/loginGoogle"))
+                        .loginPage("/api/auth/loginGoogle")
+                )
                 .httpBasic(Customizer.withDefaults());
 
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
