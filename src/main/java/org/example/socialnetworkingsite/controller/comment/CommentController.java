@@ -6,7 +6,6 @@ import org.example.socialnetworkingsite.entites.Post;
 import org.example.socialnetworkingsite.entites.User;
 import org.example.socialnetworkingsite.model.ResponseModel;
 import org.example.socialnetworkingsite.service.comment.CommentServiceImpl;
-import org.example.socialnetworkingsite.service.firebase.NotificationService;
 import org.example.socialnetworkingsite.service.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,9 +27,6 @@ public class CommentController {
     UserServiceImpl userService;
     @Autowired
     private CommentServiceImpl commentServiceImpl;
-
-    @Autowired
-    NotificationService notificationService;
 
     @PostMapping("/create")
     public ResponseEntity<ResponseModel> createComment(@RequestParam Long postId,

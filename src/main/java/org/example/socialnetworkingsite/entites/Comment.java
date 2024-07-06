@@ -1,6 +1,7 @@
 package org.example.socialnetworkingsite.entites;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class Comment {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String description;
+
 
     @ManyToOne
     @JoinColumn(name = "email_id")

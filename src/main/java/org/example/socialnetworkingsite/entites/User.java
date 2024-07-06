@@ -2,6 +2,7 @@ package org.example.socialnetworkingsite.entites;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class User {
     @Id
+    @Email(message = "Email not valid")
     private String emailId;
     private String gender;
     private String firstName;

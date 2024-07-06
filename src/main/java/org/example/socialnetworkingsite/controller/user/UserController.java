@@ -1,6 +1,7 @@
 package org.example.socialnetworkingsite.controller.user;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.example.socialnetworkingsite.constant.HTTPCode;
 import org.example.socialnetworkingsite.constant.RegexConstant;
 import org.example.socialnetworkingsite.entites.User;
@@ -24,7 +25,7 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseModel> register(@RequestBody User user) {
+    public ResponseEntity<ResponseModel> register(@RequestBody @Valid User user) {
         //Check email existed in BD
         if (userServiceImpl.findUserByEmailId(user.getEmailId()) != null) {
             return ResponseEntity.badRequest().body(new ResponseModel(HTTPCode.HTTP_CONFLICT, "Email was existed in DB"));
@@ -72,7 +73,7 @@ public class UserController {
         try {
             userServiceImpl.setupProfile(userProfile);
             return ResponseEntity.ok(new ResponseModel(HTTPCode.HTTP_OK, "User profile updated successfully"));
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
             return ResponseEntity.status(HTTPCode.HTTP_INTERNAL_ERROR)
                     .body(new ResponseModel(HTTPCode.HTTP_INTERNAL_ERROR, "Failed to update user profile"));
